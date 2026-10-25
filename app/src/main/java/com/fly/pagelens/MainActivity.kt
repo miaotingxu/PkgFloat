@@ -1,4 +1,4 @@
-package com.fly.pkg
+package com.fly.pagelens
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -15,9 +15,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import com.fly.pkg.service.ServiceState
-import com.fly.pkg.ui.MainScreen
-import com.fly.pkg.ui.theme.PkgFloatTheme
+import com.fly.pagelens.service.ServiceState
+import com.fly.pagelens.ui.MainScreen
+import com.fly.pagelens.ui.theme.PkgFloatTheme
 
 class MainActivity : ComponentActivity() {
 

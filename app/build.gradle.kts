@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.fly.pkg"
+    namespace = "com.fly.pagelens"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -12,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.fly.pkg"
+        applicationId = "com.fly.pagelens"
         minSdk = 23
         targetSdk = 36
         versionCode = 1

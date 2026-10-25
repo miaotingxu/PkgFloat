@@ -1,4 +1,4 @@
-package com.fly.pkg.ui
+package com.fly.pagelens.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

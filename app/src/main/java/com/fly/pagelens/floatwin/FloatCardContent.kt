@@ -1,4 +1,4 @@
-package com.fly.pkg.floatwin
+package com.fly.pagelens.floatwin
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,12 +30,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fly.pkg.ForegroundPage
+import com.fly.pagelens.ForegroundPage
 import kotlin.math.roundToInt
 
-private val CardBackground = Color(0x59141414)
+private val CardBackground = Color(0x73141414)
 private val CardBorder = Color(0x26FFFFFF)
-private val MonoText = Color(0xFF9ECBFF)
+private val MonoText = Color(0xFFFFFFFF)
 
 @Composable
 fun FloatCard(

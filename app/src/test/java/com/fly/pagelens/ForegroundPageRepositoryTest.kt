@@ -1,4 +1,4 @@
-package com.fly.pkg
+package com.fly.pagelens
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

@@ -9,7 +9,7 @@ PkgFloat 是一个面向开发者/测试人员的 Android 调试工具：以**�
 
 - 定位：开发/测试调试工具，精确到 Activity 类名（类似"当前 Activity"类应用）
 - 平台：Android，minSdk 23，targetSdk 36，Kotlin + Jetpack Compose
-- 包名：`com.fly.pkg`
+- 包名：`com.fly.pagelens`（2026-10-25 由 com.fly.pkg 迁移）
 
 ## 2. 已确认的需求决策
 

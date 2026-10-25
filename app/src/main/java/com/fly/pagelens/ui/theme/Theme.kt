@@ -1,4 +1,4 @@
-package com.fly.pkg.ui.theme
+package com.fly.pagelens.ui.theme
 
 import android.app.Activity
 import android.os.Build

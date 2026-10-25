@@ -1,9 +1,9 @@
-package com.fly.pkg
+package com.fly.pagelens
 
 import android.content.ComponentName
 import android.content.Context
 import android.provider.Settings
-import com.fly.pkg.service.PageDetectService
+import com.fly.pagelens.service.PageDetectService
 
 object PermissionChecks {
 

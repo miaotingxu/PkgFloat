@@ -1,4 +1,4 @@
-package com.fly.pkg
+package com.fly.pagelens
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -25,11 +25,11 @@ class PageNameUtilsTest {
 
     @Test
     fun `shouldIgnore returns true for own package`() {
-        assertTrue(PageNameUtils.shouldIgnore("com.fly.pkg", "com.fly.pkg"))
+        assertTrue(PageNameUtils.shouldIgnore("com.fly.pagelens", "com.fly.pagelens"))
     }
 
     @Test
     fun `shouldIgnore returns false for other package`() {
-        assertFalse(PageNameUtils.shouldIgnore("com.tencent.mm", "com.fly.pkg"))
+        assertFalse(PageNameUtils.shouldIgnore("com.tencent.mm", "com.fly.pagelens"))
     }
 }

@@ -1,4 +1,4 @@
-package com.fly.pkg.ui.theme
+package com.fly.pagelens.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

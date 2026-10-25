@@ -12,11 +12,11 @@
 
 ## Global Constraints
 
-- 包名 `com.fly.pkg`，applicationId `com.fly.pkg`
+- 包名 `com.fly.pagelens`，applicationId `com.fly.pagelens`
 - minSdk 23，targetSdk 36，compileSdk 36
 - 悬浮窗样式：详情卡片（样式 B）——半透明深色圆角卡片，图标 + 应用名 + 等宽字体两行（完整包名 + Activity 完整类名）
 - 悬浮窗权限声明 `SYSTEM_ALERT_WINDOW`；不声明网络权限；不使用前台服务和通知
-- 本应用自身包名（`com.fly.pkg`）的窗口事件必须过滤，不显示自己
+- 本应用自身包名（`com.fly.pagelens`）的窗口事件必须过滤，不显示自己
 - 回到桌面照常显示 Launcher 信息；息屏不做特殊处理
 - 提交信息用英文
 - Windows 环境，Gradle 命令用 `./gradlew ...`（Git Bash）
@@ -1368,10 +1368,10 @@ Expected: BUILD SUCCESSFUL，全部 11 个单测通过（PageNameUtils 4 + Repos
 ```bash
 ./gradlew installDebug
 adb logcat -c
-adb shell monkey -p com.fly.pkg -c android.intent.category.LAUNCHER 1
+adb shell monkey -p com.fly.pagelens -c android.intent.category.LAUNCHER 1
 sleep 6
-adb logcat -d -b crash   # 期望：无 com.fly.pkg 的 FATAL EXCEPTION
-adb shell dumpsys window windows | grep "com.fly.pkg"   # 期望：能看到 SYSTEM_ALERT_WINDOW 悬浮窗
+adb logcat -d -b crash   # 期望：无 com.fly.pagelens 的 FATAL EXCEPTION
+adb shell dumpsys window windows | grep "com.fly.pagelens"   # 期望：能看到 SYSTEM_ALERT_WINDOW 悬浮窗
 ```
 
 - [x] **Step 3: 推送**

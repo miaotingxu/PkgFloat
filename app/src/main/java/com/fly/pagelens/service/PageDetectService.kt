@@ -1,13 +1,13 @@
-package com.fly.pkg.service
+package com.fly.pagelens.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.pm.PackageManager
 import android.view.accessibility.AccessibilityEvent
-import com.fly.pkg.ForegroundPage
-import com.fly.pkg.ForegroundPageRepository
-import com.fly.pkg.PageNameUtils
-import com.fly.pkg.SettingsStore
-import com.fly.pkg.floatwin.FloatingWindowController
+import com.fly.pagelens.ForegroundPage
+import com.fly.pagelens.ForegroundPageRepository
+import com.fly.pagelens.PageNameUtils
+import com.fly.pagelens.SettingsStore
+import com.fly.pagelens.floatwin.FloatingWindowController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

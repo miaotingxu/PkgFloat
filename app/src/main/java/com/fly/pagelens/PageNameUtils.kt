@@ -1,4 +1,4 @@
-package com.fly.pkg
+package com.fly.pagelens
 
 object PageNameUtils {
 

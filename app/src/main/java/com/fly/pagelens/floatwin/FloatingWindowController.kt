@@ -1,4 +1,4 @@
-package com.fly.pkg.floatwin
+package com.fly.pagelens.floatwin
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -22,9 +22,9 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import com.fly.pkg.ForegroundPage
-import com.fly.pkg.SettingsStore
-import com.fly.pkg.WindowPositionUtils
+import com.fly.pagelens.ForegroundPage
+import com.fly.pagelens.SettingsStore
+import com.fly.pagelens.WindowPositionUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FloatingWindowController(private val context: Context) {
