@@ -12,3 +12,6 @@ local.properties
 AGENT.md
 .kotlin
 .idea
+keys/
+keystore.properties
+dist/
