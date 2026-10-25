@@ -1070,3 +1070,312 @@ Expected: 安装成功
 ```bash
 git push
 ```
+
+---
+
+### Task 8: WindowPositionUtils 位置钳制纯函数（TDD）
+
+**Files:**
+- Create: `app/src/main/java/com/fly/pkg/WindowPositionUtils.kt`
+- Test: `app/src/test/java/com/fly/pkg/WindowPositionUtilsTest.kt`
+
+**Interfaces:**
+- Produces: `WindowPositionUtils.clampPosition(x: Int, y: Int, screenW: Int, screenH: Int, viewW: Int, viewH: Int): Pair<Int, Int>` — 把 (x, y) 钳制到 `[0, screenW-viewW] × [0, screenH-viewH]`；view 比屏幕大时钳到 0。Task 9 消费
+
+- [ ] **Step 1: Write the failing test**
+
+新建 `app/src/test/java/com/fly/pkg/WindowPositionUtilsTest.kt`：
+
+```kotlin
+package com.fly.pkg
+
+import org.junit.Assert.assertEquals
+import org.junit.Test
+
+class WindowPositionUtilsTest {
+
+    @Test
+    fun `position inside screen stays unchanged`() {
+        assertEquals(
+            100 to 200,
+            WindowPositionUtils.clampPosition(100, 200, 1080, 1920, 300, 100)
+        )
+    }
+
+    @Test
+    fun `negative position clamps to zero`() {
+        assertEquals(
+            0 to 0,
+            WindowPositionUtils.clampPosition(-50, -10, 1080, 1920, 300, 100)
+        )
+    }
+
+    @Test
+    fun `position beyond screen clamps to max`() {
+        assertEquals(
+            780 to 1820,
+            WindowPositionUtils.clampPosition(2000, 5000, 1080, 1920, 300, 100)
+        )
+    }
+
+    @Test
+    fun `view larger than screen clamps to zero`() {
+        assertEquals(
+            0 to 0,
+            WindowPositionUtils.clampPosition(500, 500, 1080, 1920, 2000, 3000)
+        )
+    }
+}
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+Run: `./gradlew testDebugUnitTest --tests "com.fly.pkg.WindowPositionUtilsTest"`
+Expected: FAIL，编译错误 `Unresolved reference: WindowPositionUtils`
+
+- [ ] **Step 3: Write minimal implementation**
+
+新建 `app/src/main/java/com/fly/pkg/WindowPositionUtils.kt`：
+
+```kotlin
+package com.fly.pkg
+
+object WindowPositionUtils {
+
+    fun clampPosition(
+        x: Int,
+        y: Int,
+        screenW: Int,
+        screenH: Int,
+        viewW: Int,
+        viewH: Int,
+    ): Pair<Int, Int> {
+        val maxX = (screenW - viewW).coerceAtLeast(0)
+        val maxY = (screenH - viewH).coerceAtLeast(0)
+        return x.coerceIn(0, maxX) to y.coerceIn(0, maxY)
+    }
+}
+```
+
+- [ ] **Step 4: Run test to verify it passes**
+
+Run: `./gradlew testDebugUnitTest --tests "com.fly.pkg.WindowPositionUtilsTest"`
+Expected: PASS（4 个测试全绿）
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add app/src/main/java/com/fly/pkg/WindowPositionUtils.kt app/src/test/java/com/fly/pkg/WindowPositionUtilsTest.kt
+git commit -m "Add WindowPositionUtils for clamping overlay position to screen"
+```
+
+---
+
+### Task 9: 悬浮窗适配 — 最大宽度、软换行、位置钳制接入
+
+**Files:**
+- Modify: `app/src/main/java/com/fly/pkg/floatwin/FloatCardContent.kt`
+- Modify: `app/src/main/java/com/fly/pkg/floatwin/FloatingWindowController.kt`
+
+**Interfaces:**
+- Consumes: `WindowPositionUtils.clampPosition`（Task 8）
+- Produces: `FloatCard` 新增参数 `maxWidth: androidx.compose.ui.unit.Dp`（最后一个参数，无默认值）；Controller 内部方法签名不变
+
+- [ ] **Step 1: FloatCard 加最大宽度**
+
+`FloatCardContent.kt` 中：
+
+1. import 列表加：
+
+```kotlin
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.ui.unit.Dp
+```
+
+2. `FloatCard` 签名加参数（放在 `onDragEnd: () -> Unit,` 之后）：
+
+```kotlin
+    maxWidth: Dp,
+```
+
+3. 卡片 Column 的 modifier 链中，`.clip(RoundedCornerShape(14.dp))` 之前插入：
+
+```kotlin
+            .widthIn(max = maxWidth)
+```
+
+- [ ] **Step 2: Controller 接入钳制与最大宽度**
+
+`FloatingWindowController.kt` 中：
+
+1. import 列表加：
+
+```kotlin
+import androidx.compose.ui.unit.dp
+import com.fly.pkg.WindowPositionUtils
+```
+
+2. 类中加两个私有方法：
+
+```kotlin
+    private fun screenMetrics() = context.resources.displayMetrics
+
+    private fun maxCardWidthPx(): Int = (screenMetrics().widthPixels * 0.8f).toInt()
+```
+
+3. `showCard()` 中 `FloatCard(...)` 调用加参数：
+
+```kotlin
+                maxWidth = (maxCardWidthPx() / screenMetrics().density).dp,
+```
+
+并把 `addOverlayView(view, settings.windowX, settings.windowY)` 改为钳制后的位置：
+
+```kotlin
+        val m = screenMetrics()
+        val minVisible = (48 * m.density).toInt()
+        val (cx, cy) = WindowPositionUtils.clampPosition(
+            settings.windowX, settings.windowY, m.widthPixels, m.heightPixels, minVisible, minVisible,
+        )
+        addOverlayView(view, cx, cy)
+```
+
+4. `showDot(edgeX: Int, y: Int)` 中 `addOverlayView(view, edgeX, y)` 改为：
+
+```kotlin
+        val m = screenMetrics()
+        val dotSize = (36 * m.density).toInt()
+        val (cx, cy) = WindowPositionUtils.clampPosition(edgeX, y, m.widthPixels, m.heightPixels, dotSize, dotSize)
+        addOverlayView(view, cx, cy)
+```
+
+5. `onCardDragEnd()` 中，保存位置前先钳制。把
+
+```kotlin
+        settings.windowX = lp.x
+        settings.windowY = lp.y
+```
+
+改为：
+
+```kotlin
+        val (cx, cy) = WindowPositionUtils.clampPosition(
+            lp.x, lp.y, metrics.widthPixels, metrics.heightPixels, view.width, view.height,
+        )
+        if (cx != lp.x || cy != lp.y) {
+            lp.x = cx
+            lp.y = cy
+            windowManager.updateViewLayout(view, lp)
+        }
+        settings.windowX = lp.x
+        settings.windowY = lp.y
+```
+
+- [ ] **Step 3: 验证编译与测试**
+
+Run: `./gradlew assembleDebug testDebugUnitTest`
+Expected: BUILD SUCCESSFUL，全部单测通过
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add app/src/main/java/com/fly/pkg/floatwin/
+git commit -m "Constrain card width and clamp overlay position to screen"
+```
+
+---
+
+### Task 10: 权限跳转兜底
+
+**Files:**
+- Modify: `app/src/main/java/com/fly/pkg/MainActivity.kt`
+
+**Interfaces:**
+- Consumes: 无新接口
+- Produces: 无新接口（行为变更：设置页打不开时降级到应用详情页）
+
+- [ ] **Step 1: MainActivity 加安全跳转**
+
+`MainActivity.kt` 中：
+
+1. import 列表加：
+
+```kotlin
+import android.content.ActivityNotFoundException
+```
+
+2. 类中加私有方法：
+
+```kotlin
+    private fun startSettingsSafely(intent: Intent) {
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            startActivity(
+                Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:$packageName"),
+                )
+            )
+        }
+    }
+```
+
+3. `onOpenOverlaySettings` 和 `onOpenA11ySettings` 两个回调里的 `startActivity(...)` 改为 `startSettingsSafely(...)`：
+
+```kotlin
+                        onOpenOverlaySettings = {
+                            startSettingsSafely(
+                                Intent(
+                                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                    Uri.parse("package:$packageName"),
+                                )
+                            )
+                        },
+                        onOpenA11ySettings = {
+                            startSettingsSafely(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                        },
+```
+
+- [ ] **Step 2: 验证编译**
+
+Run: `./gradlew assembleDebug`
+Expected: BUILD SUCCESSFUL
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add app/src/main/java/com/fly/pkg/MainActivity.kt
+git commit -m "Fall back to app details when settings page is unavailable"
+```
+
+---
+
+### Task 11: 回归验证
+
+**Files:**
+- 无新文件（验收任务）
+
+- [ ] **Step 1: 全量构建与测试**
+
+Run: `./gradlew clean assembleDebug testDebugUnitTest`
+Expected: BUILD SUCCESSFUL，全部 11 个单测通过（PageNameUtils 4 + Repository 2 + WindowPositionUtils 4 + Example 1）
+
+- [ ] **Step 2: API 24 模拟器冒烟**
+
+在已连接的模拟器上执行：
+
+```bash
+./gradlew installDebug
+adb logcat -c
+adb shell monkey -p com.fly.pkg -c android.intent.category.LAUNCHER 1
+sleep 6
+adb logcat -d -b crash   # 期望：无 com.fly.pkg 的 FATAL EXCEPTION
+adb shell dumpsys window windows | grep "com.fly.pkg"   # 期望：能看到 SYSTEM_ALERT_WINDOW 悬浮窗
+```
+
+- [ ] **Step 3: 推送**
+
+```bash
+git push
+```

@@ -102,3 +102,13 @@ PkgFloat 是一个面向开发者/测试人员的 Android 调试工具：以**�
 - 历史记录、页面停留时长统计
 - 悬浮窗样式 A/C 及其配置项
 - 开机自启
+
+## 10. 兼容性适配（2026-10-25 追加，已确认）
+
+目标：尽量适配大部分手机型号（minSdk 保持 23），不加厂商保活专项。
+
+1. **权限跳转兜底**：悬浮窗/无障碍设置页跳转 Intent 用 `try/catch ActivityNotFoundException` 包裹，失败时降级到本应用系统详情页（`ACTION_APPLICATION_DETAILS_SETTINGS`）
+2. **API 版本兼容**：窗口类型按版本分派（API 26+ `TYPE_APPLICATION_OVERLAY`，API 23-25 `TYPE_PHONE`，已完成）；`getApplicationInfo(pkg, 0)` 旧签名在 API 33+ 已废弃但兼容，保持现状；Android 13+ 侧载"受限设置"由系统页面自行提示
+3. **长类名与屏幕适配**：卡片最大宽度为屏幕宽度 80%；包名/类名等宽文本允许软换行（调试需看到完整类名，换行优于省略）
+4. **位置钳制**：新增纯函数 `WindowPositionUtils.clampPosition(x, y, screenW, screenH, viewW, viewH): Pair<Int, Int>`，把悬浮窗位置钳制在屏幕可视范围内；attach、显示圆点、拖动结束保存前都走钳制，解决旋转/换设备后保存位置越界导致悬浮窗"消失"
+5. **验证**：clamp 纯函数单元测试（TDD）；API 24 模拟器回归冒烟
