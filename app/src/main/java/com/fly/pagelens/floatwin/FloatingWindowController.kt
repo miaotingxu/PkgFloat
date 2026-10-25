@@ -196,9 +196,10 @@ class FloatingWindowController(private val context: Context) {
 
     private fun copyCurrentClassName() {
         val page = currentPage ?: return
+        val text = page.fragmentName?.let { "${page.fullClassName}\n$it" } ?: page.fullClassName
         val clipboard =
             context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        clipboard.setPrimaryClip(ClipData.newPlainText("activity", page.fullClassName))
+        clipboard.setPrimaryClip(ClipData.newPlainText("activity", text))
         Toast.makeText(context, "已复制", Toast.LENGTH_SHORT).show()
     }
 

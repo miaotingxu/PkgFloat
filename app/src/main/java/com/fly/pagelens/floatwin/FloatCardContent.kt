@@ -36,6 +36,7 @@ import kotlin.math.roundToInt
 private val CardBackground = Color(0x73141414)
 private val CardBorder = Color(0x26FFFFFF)
 private val MonoText = Color(0xFFFFFFFF)
+private val FragmentText = Color(0xFFA5D6A7)
 
 @Composable
 fun FloatCard(
@@ -90,6 +91,9 @@ fun FloatCard(
             Spacer(Modifier.height(6.dp))
             Text(page.packageName, color = MonoText, fontFamily = FontFamily.Monospace, fontSize = 13.sp)
             Text(page.fullClassName, color = MonoText, fontFamily = FontFamily.Monospace, fontSize = 13.sp)
+            page.fragmentName?.let {
+                Text(it, color = FragmentText, fontFamily = FontFamily.Monospace, fontSize = 13.sp)
+            }
         }
     }
 }

@@ -113,3 +113,13 @@ PkgFloat 是一个面向开发者/测试人员的 Android 调试工具：以**�
 3. **长类名与屏幕适配**：卡片最大宽度为屏幕宽度 80%；包名/类名等宽文本允许软换行（调试需看到完整类名，换行优于省略）
 4. **位置钳制**：新增纯函数 `WindowPositionUtils.clampPosition(x, y, screenW, screenH, viewW, viewH): Pair<Int, Int>`，把悬浮窗位置钳制在屏幕可视范围内；attach、显示圆点、拖动结束保存前都走钳制，解决旋转/换设备后保存位置越界导致悬浮窗"消失"
 5. **验证**：clamp 纯函数单元测试（TDD）；API 24 模拟器回归冒烟
+
+## 11. Fragment 级显示（2026-10-25 追加，已确认）
+
+第三方应用的 Fragment 无法通过系统 API 获取（Fragment 不创建独立窗口，无跨进程事件）。针对**自己开发的 App**，采用 SDK 上报方案：
+
+- **SDK**：`sdk/PageLensReporter.kt` 单文件，拷入目标工程，`Application.onCreate` 一行 `PageLensReporter.install(this)`；通过 `FragmentLifecycleCallbacks`（recursive=true）在 Fragment `onResumed` 时向 PageLens 发显式广播（action `com.fly.pagelens.REPORT_FRAGMENT`，带包名/Activity/Fragment 类名）
+- **接收**：Manifest 注册 `FragmentReportReceiver`（`exported=true`，显式广播不受 Android 8+ 隐式广播限制）
+- **数据**：`ForegroundPage` 增加 `fragmentName: String?`；`updateFragment` 仅在包名和 Activity 都匹配当前前台页时生效；新 Activity 事件自动清空 Fragment
+- **UI**：卡片第三行浅绿色等宽文本显示 Fragment；单击复制内容变为 Activity + Fragment 两行
+- **安全说明**：广播可被伪造，仅用于调试场景

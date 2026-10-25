@@ -4,4 +4,5 @@ data class ForegroundPage(
     val packageName: String,
     val fullClassName: String,
     val appName: String,
+    val fragmentName: String? = null,
 )
