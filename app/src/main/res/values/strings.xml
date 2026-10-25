@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PkgFloat</string>
+    <string name="accessibility_service_description">监听前台窗口切换，用于在悬浮窗显示当前应用的页面信息</string>
 </resources>
