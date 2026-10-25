@@ -60,6 +60,15 @@ android {
     }
 }
 
+tasks.register<Copy>("packageReleaseApk") {
+    dependsOn("assembleRelease")
+    val apkName = "PageLens-v${android.defaultConfig.versionName}.apk"
+    from(layout.buildDirectory.file("outputs/apk/release/app-release.apk")) {
+        rename { apkName }
+    }
+    into(rootProject.file("dist"))
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
