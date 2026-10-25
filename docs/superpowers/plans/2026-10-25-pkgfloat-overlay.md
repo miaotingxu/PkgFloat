@@ -35,7 +35,7 @@
 **Interfaces:**
 - Produces: 依赖别名 `libs.androidx.lifecycle.viewmodel`、`libs.androidx.savedstate`；字符串资源 `accessibility_service_description`；无障碍配置 `@xml/accessibility_service_config`（Task 5 引用）
 
-- [ ] **Step 1: 新增依赖**
+- [x] **Step 1: 新增依赖**
 
 `gradle/libs.versions.toml` 的 `[versions]` 段末尾加：
 
@@ -58,7 +58,7 @@ implementation(libs.androidx.lifecycle.viewmodel)
 implementation(libs.androidx.savedstate)
 ```
 
-- [ ] **Step 2: Manifest 声明悬浮窗权限**
+- [x] **Step 2: Manifest 声明悬浮窗权限**
 
 `app/src/main/AndroidManifest.xml` 中 `<manifest>` 标签内、`<application>` 之前加：
 
@@ -66,7 +66,7 @@ implementation(libs.androidx.savedstate)
 <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 ```
 
-- [ ] **Step 3: 字符串与无障碍配置**
+- [x] **Step 3: 字符串与无障碍配置**
 
 `app/src/main/res/values/strings.xml` 中加：
 
@@ -85,12 +85,12 @@ implementation(libs.androidx.savedstate)
     android:description="@string/accessibility_service_description" />
 ```
 
-- [ ] **Step 4: 验证编译**
+- [x] **Step 4: 验证编译**
 
 Run: `./gradlew assembleDebug`
 Expected: BUILD SUCCESSFUL
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add gradle/libs.versions.toml app/build.gradle.kts app/src/main/AndroidManifest.xml app/src/main/res/values/strings.xml app/src/main/res/xml/accessibility_service_config.xml
@@ -111,7 +111,7 @@ git commit -m "Add dependencies, overlay permission and accessibility config"
   - `PageNameUtils.shouldIgnore(packageName: String, selfPackageName: String): Boolean` — 两者相等返回 true
   - Task 5 的 `PageDetectService` 消费这两个函数
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 新建 `app/src/test/java/com/fly/pkg/PageNameUtilsTest.kt`：
 
@@ -153,12 +153,12 @@ class PageNameUtilsTest {
 }
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `./gradlew testDebugUnitTest --tests "com.fly.pkg.PageNameUtilsTest"`
 Expected: FAIL，编译错误 `Unresolved reference: PageNameUtils`
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 新建 `app/src/main/java/com/fly/pkg/PageNameUtils.kt`：
 
@@ -175,12 +175,12 @@ object PageNameUtils {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `./gradlew testDebugUnitTest --tests "com.fly.pkg.PageNameUtilsTest"`
 Expected: PASS（4 个测试全绿）
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/src/main/java/com/fly/pkg/PageNameUtils.kt app/src/test/java/com/fly/pkg/PageNameUtilsTest.kt
@@ -207,7 +207,7 @@ git commit -m "Add PageNameUtils for class name resolution and self filtering"
   - `SettingsStore(context: Context)`，属性 `floatEnabled: Boolean`、`windowX: Int`、`windowY: Int`（均可读写）；常量 `SettingsStore.DEFAULT_WINDOW_X = 24`、`DEFAULT_WINDOW_Y = 200`
   - Task 4、5、6 均消费以上接口
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 新建 `app/src/test/java/com/fly/pkg/ForegroundPageRepositoryTest.kt`：
 
@@ -240,12 +240,12 @@ class ForegroundPageRepositoryTest {
 
 注意：Repository 是单例，测试会改动共享状态；每个测试都先写入再断言，不依赖初始值，因此互不影响。
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `./gradlew testDebugUnitTest --tests "com.fly.pkg.ForegroundPageRepositoryTest"`
 Expected: FAIL，编译错误 `Unresolved reference: ForegroundPageRepository`
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 新建 `app/src/main/java/com/fly/pkg/ForegroundPage.kt`：
 
@@ -320,12 +320,12 @@ class SettingsStore(context: Context) {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `./gradlew testDebugUnitTest --tests "com.fly.pkg.ForegroundPageRepositoryTest"`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/src/main/java/com/fly/pkg/ForegroundPage.kt app/src/main/java/com/fly/pkg/ForegroundPageRepository.kt app/src/main/java/com/fly/pkg/SettingsStore.kt app/src/test/java/com/fly/pkg/ForegroundPageRepositoryTest.kt
@@ -347,7 +347,7 @@ git commit -m "Add foreground page model, repository and settings store"
   - `FloatingWindowController(context: Context)`，方法 `attach()`、`detach()`、`update(page: ForegroundPage)` — Task 5 消费
   - `FloatWindowLifecycleOwner`，方法 `onWindowAttach()`、`onWindowDetach()` — 仅供 Controller 内部使用
 
-- [ ] **Step 1: 实现 FloatWindowLifecycleOwner**
+- [x] **Step 1: 实现 FloatWindowLifecycleOwner**
 
 ComposeView 挂在 WindowManager 里时没有 Activity 提供的 owner，需手动挂载。新建 `app/src/main/java/com/fly/pkg/floatwin/FloatWindowLifecycleOwner.kt`：
 
@@ -390,7 +390,7 @@ class FloatWindowLifecycleOwner : LifecycleOwner, ViewModelStoreOwner, SavedStat
 }
 ```
 
-- [ ] **Step 2: 实现卡片与圆点 UI**
+- [x] **Step 2: 实现卡片与圆点 UI**
 
 新建 `app/src/main/java/com/fly/pkg/floatwin/FloatCardContent.kt`：
 
@@ -496,7 +496,7 @@ fun FloatDot(onClick: () -> Unit) {
 }
 ```
 
-- [ ] **Step 3: 实现 FloatingWindowController**
+- [x] **Step 3: 实现 FloatingWindowController**
 
 新建 `app/src/main/java/com/fly/pkg/floatwin/FloatingWindowController.kt`：
 
@@ -658,12 +658,12 @@ class FloatingWindowController(private val context: Context) {
 }
 ```
 
-- [ ] **Step 4: 验证编译**
+- [x] **Step 4: 验证编译**
 
 Run: `./gradlew assembleDebug`
 Expected: BUILD SUCCESSFUL
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/src/main/java/com/fly/pkg/floatwin/
@@ -684,7 +684,7 @@ git commit -m "Add floating window controller with draggable collapsible card"
   - `class PageDetectService : AccessibilityService`
   - `ServiceState.running: MutableStateFlow<Boolean>`（Task 6 消费）
 
-- [ ] **Step 1: 实现服务**
+- [x] **Step 1: 实现服务**
 
 新建 `app/src/main/java/com/fly/pkg/service/PageDetectService.kt`：
 
@@ -766,7 +766,7 @@ class PageDetectService : AccessibilityService() {
 }
 ```
 
-- [ ] **Step 2: Manifest 声明服务**
+- [x] **Step 2: Manifest 声明服务**
 
 `app/src/main/AndroidManifest.xml` 的 `<application>` 内、`<activity>` 之后加：
 
@@ -784,12 +784,12 @@ class PageDetectService : AccessibilityService() {
 </service>
 ```
 
-- [ ] **Step 3: 验证编译**
+- [x] **Step 3: 验证编译**
 
 Run: `./gradlew assembleDebug`
 Expected: BUILD SUCCESSFUL
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add app/src/main/java/com/fly/pkg/service/PageDetectService.kt app/src/main/AndroidManifest.xml
@@ -809,7 +809,7 @@ git commit -m "Add accessibility service for foreground page detection"
 - Consumes: `ForegroundPageRepository.floatEnabled` / `setFloatEnabled`（Task 3）、`SettingsStore`（Task 3）、`ServiceState.running`（Task 5）
 - Produces: `PermissionChecks.isAccessibilityServiceEnabled(context: Context): Boolean`
 
-- [ ] **Step 1: 实现 PermissionChecks**
+- [x] **Step 1: 实现 PermissionChecks**
 
 新建 `app/src/main/java/com/fly/pkg/PermissionChecks.kt`：
 
@@ -834,7 +834,7 @@ object PermissionChecks {
 }
 ```
 
-- [ ] **Step 2: 实现 MainScreen**
+- [x] **Step 2: 实现 MainScreen**
 
 新建 `app/src/main/java/com/fly/pkg/ui/MainScreen.kt`：
 
@@ -944,7 +944,7 @@ private fun PermissionCard(
 }
 ```
 
-- [ ] **Step 3: 重写 MainActivity**
+- [x] **Step 3: 重写 MainActivity**
 
 整体替换 `app/src/main/java/com/fly/pkg/MainActivity.kt`：
 
@@ -1018,12 +1018,12 @@ class MainActivity : ComponentActivity() {
 }
 ```
 
-- [ ] **Step 4: 验证编译与单元测试**
+- [x] **Step 4: 验证编译与单元测试**
 
 Run: `./gradlew assembleDebug testDebugUnitTest`
 Expected: BUILD SUCCESSFUL，所有单元测试通过
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/src/main/java/com/fly/pkg/PermissionChecks.kt app/src/main/java/com/fly/pkg/ui/MainScreen.kt app/src/main/java/com/fly/pkg/MainActivity.kt
@@ -1040,17 +1040,17 @@ git commit -m "Add main screen with master toggle and permission guidance"
 **Interfaces:**
 - Consumes: 全部前序任务
 
-- [ ] **Step 1: 全量构建与测试**
+- [x] **Step 1: 全量构建与测试**
 
 Run: `./gradlew clean assembleDebug testDebugUnitTest`
 Expected: BUILD SUCCESSFUL，全部测试通过
 
-- [ ] **Step 2: 安装到真机/模拟器**
+- [ ] **Step 2: 安装到真机/模拟器**（当前无设备连接，待用户执行）
 
 Run: `./gradlew installDebug`
 Expected: 安装成功
 
-- [ ] **Step 3: 手动验收清单（对照 spec 第 8 节）**
+- [ ] **Step 3: 手动验收清单（对照 spec 第 8 节）**（待真机验收）
 
 逐项在真机上验证：
 
@@ -1065,7 +1065,7 @@ Expected: 安装成功
 9. 关闭总开关，悬浮窗消失；重新打开恢复
 10. 在系统无障碍设置中强行关闭服务，回到应用，底部状态变红提示未运行
 
-- [ ] **Step 4: 推送最终代码**
+- [x] **Step 4: 推送最终代码**
 
 ```bash
 git push
