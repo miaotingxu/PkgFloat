@@ -69,6 +69,12 @@ tasks.register<Copy>("packageReleaseApk") {
     into(rootProject.file("dist"))
 }
 
+afterEvaluate {
+    tasks.named("assembleRelease") {
+        finalizedBy("packageReleaseApk")
+    }
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
