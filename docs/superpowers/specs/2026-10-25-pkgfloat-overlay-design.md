@@ -60,7 +60,7 @@ PkgFloat 是一个面向开发者/测试人员的 Android 调试工具：以**�
 
 ## 5. 悬浮窗细节
 
-- `WindowManager.LayoutParams`：`TYPE_APPLICATION_OVERLAY`、`FLAG_NOT_FOCUSABLE`、`PixelFormat.TRANSLUCENT`
+- `WindowManager.LayoutParams`：窗口类型 API 26+ 用 `TYPE_APPLICATION_OVERLAY`，API 23-25 用 `TYPE_PHONE`（`FLAG_NOT_FOCUSABLE`、`PixelFormat.TRANSLUCENT`）；`addView` 需捕获 `BadTokenException` 防止服务进程崩溃
 - 卡片内容：应用图标 + 应用名（粗体），下方等宽字体两行显示完整包名 + Activity 完整类名
 - 半透明深色圆角卡片（样式 B，见 `.superpowers/brainstorm/` 中的 mockup）
 - 交互：

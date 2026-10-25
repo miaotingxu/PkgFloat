@@ -5,7 +5,9 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.PixelFormat
+import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.Toast
@@ -38,6 +40,10 @@ class FloatingWindowController(private val context: Context) {
     private var dotView: ComposeView? = null
     private var currentPage: ForegroundPage? = null
 
+    companion object {
+        private const val TAG = "FloatingWindowController"
+    }
+
     fun attach() {
         if (!Settings.canDrawOverlays(context)) return
         lifecycleOwner.onWindowAttach()
@@ -57,11 +63,19 @@ class FloatingWindowController(private val context: Context) {
         contentFlow.value = CardContent(page, loadIcon(page.packageName))
     }
 
+    private fun overlayWindowType(): Int =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        } else {
+            @Suppress("DEPRECATION")
+            WindowManager.LayoutParams.TYPE_PHONE
+        }
+
     private fun newWindowParams(x: Int, y: Int): WindowManager.LayoutParams =
         WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            overlayWindowType(),
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             PixelFormat.TRANSLUCENT,
@@ -83,6 +97,15 @@ class FloatingWindowController(private val context: Context) {
         if (view != null && view.isAttachedToWindow) windowManager.removeView(view)
     }
 
+    private fun addOverlayView(view: ComposeView, x: Int, y: Int) {
+        try {
+            windowManager.addView(view, newWindowParams(x, y))
+        } catch (e: WindowManager.BadTokenException) {
+            Log.w(TAG, "Failed to add overlay window", e)
+            Toast.makeText(context, "悬浮窗创建失败，请检查悬浮窗权限", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun showCard() {
         removeView(dotView)
         dotView = null
@@ -98,7 +121,7 @@ class FloatingWindowController(private val context: Context) {
             )
         }
         cardView = view
-        windowManager.addView(view, newWindowParams(settings.windowX, settings.windowY))
+        addOverlayView(view, settings.windowX, settings.windowY)
     }
 
     private fun showDot(edgeX: Int, y: Int) {
@@ -109,7 +132,7 @@ class FloatingWindowController(private val context: Context) {
             FloatDot(onClick = { showCard() })
         }
         dotView = view
-        windowManager.addView(view, newWindowParams(edgeX, y))
+        addOverlayView(view, edgeX, y)
     }
 
     private fun moveCard(dx: Int, dy: Int) {
