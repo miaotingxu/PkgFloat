@@ -71,21 +71,21 @@ fun FloatCard(
                 Image(
                     bitmap = icon,
                     contentDescription = null,
-                    modifier = Modifier.size(22.dp).clip(RoundedCornerShape(6.dp)),
+                    modifier = Modifier.size(16.dp).clip(RoundedCornerShape(4.dp)),
                 )
                 Spacer(Modifier.width(8.dp))
             }
             Text(
                 text = page?.appName ?: "等待页面切换…",
                 color = Color.White,
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
             )
         }
         if (page != null) {
             Spacer(Modifier.height(6.dp))
-            Text(page.packageName, color = MonoText, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
-            Text(page.fullClassName, color = MonoText, fontFamily = FontFamily.Monospace, fontSize = 11.sp)
+            Text(page.packageName, color = MonoText, fontFamily = FontFamily.Monospace, fontSize = 13.sp)
+            Text(page.fullClassName, color = MonoText, fontFamily = FontFamily.Monospace, fontSize = 13.sp)
         }
     }
 }

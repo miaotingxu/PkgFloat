@@ -23,7 +23,7 @@ class SettingsStore(context: Context) {
         private const val KEY_FLOAT_ENABLED = "float_enabled"
         private const val KEY_WINDOW_X = "window_x"
         private const val KEY_WINDOW_Y = "window_y"
-        const val DEFAULT_WINDOW_X = 24
-        const val DEFAULT_WINDOW_Y = 200
+        const val DEFAULT_WINDOW_X = 0
+        const val DEFAULT_WINDOW_Y = 0
     }
 }
