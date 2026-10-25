@@ -1082,7 +1082,7 @@ git push
 **Interfaces:**
 - Produces: `WindowPositionUtils.clampPosition(x: Int, y: Int, screenW: Int, screenH: Int, viewW: Int, viewH: Int): Pair<Int, Int>` — 把 (x, y) 钳制到 `[0, screenW-viewW] × [0, screenH-viewH]`；view 比屏幕大时钳到 0。Task 9 消费
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 新建 `app/src/test/java/com/fly/pkg/WindowPositionUtilsTest.kt`：
 
@@ -1128,12 +1128,12 @@ class WindowPositionUtilsTest {
 }
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `./gradlew testDebugUnitTest --tests "com.fly.pkg.WindowPositionUtilsTest"`
 Expected: FAIL，编译错误 `Unresolved reference: WindowPositionUtils`
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 新建 `app/src/main/java/com/fly/pkg/WindowPositionUtils.kt`：
 
@@ -1157,12 +1157,12 @@ object WindowPositionUtils {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `./gradlew testDebugUnitTest --tests "com.fly.pkg.WindowPositionUtilsTest"`
 Expected: PASS（4 个测试全绿）
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/src/main/java/com/fly/pkg/WindowPositionUtils.kt app/src/test/java/com/fly/pkg/WindowPositionUtilsTest.kt
@@ -1181,7 +1181,7 @@ git commit -m "Add WindowPositionUtils for clamping overlay position to screen"
 - Consumes: `WindowPositionUtils.clampPosition`（Task 8）
 - Produces: `FloatCard` 新增参数 `maxWidth: androidx.compose.ui.unit.Dp`（最后一个参数，无默认值）；Controller 内部方法签名不变
 
-- [ ] **Step 1: FloatCard 加最大宽度**
+- [x] **Step 1: FloatCard 加最大宽度**
 
 `FloatCardContent.kt` 中：
 
@@ -1204,7 +1204,7 @@ import androidx.compose.ui.unit.Dp
             .widthIn(max = maxWidth)
 ```
 
-- [ ] **Step 2: Controller 接入钳制与最大宽度**
+- [x] **Step 2: Controller 接入钳制与最大宽度**
 
 `FloatingWindowController.kt` 中：
 
@@ -1271,12 +1271,12 @@ import com.fly.pkg.WindowPositionUtils
         settings.windowY = lp.y
 ```
 
-- [ ] **Step 3: 验证编译与测试**
+- [x] **Step 3: 验证编译与测试**
 
 Run: `./gradlew assembleDebug testDebugUnitTest`
 Expected: BUILD SUCCESSFUL，全部单测通过
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add app/src/main/java/com/fly/pkg/floatwin/
@@ -1294,7 +1294,7 @@ git commit -m "Constrain card width and clamp overlay position to screen"
 - Consumes: 无新接口
 - Produces: 无新接口（行为变更：设置页打不开时降级到应用详情页）
 
-- [ ] **Step 1: MainActivity 加安全跳转**
+- [x] **Step 1: MainActivity 加安全跳转**
 
 `MainActivity.kt` 中：
 
@@ -1337,12 +1337,12 @@ import android.content.ActivityNotFoundException
                         },
 ```
 
-- [ ] **Step 2: 验证编译**
+- [x] **Step 2: 验证编译**
 
 Run: `./gradlew assembleDebug`
 Expected: BUILD SUCCESSFUL
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add app/src/main/java/com/fly/pkg/MainActivity.kt
@@ -1356,12 +1356,12 @@ git commit -m "Fall back to app details when settings page is unavailable"
 **Files:**
 - 无新文件（验收任务）
 
-- [ ] **Step 1: 全量构建与测试**
+- [x] **Step 1: 全量构建与测试**
 
 Run: `./gradlew clean assembleDebug testDebugUnitTest`
 Expected: BUILD SUCCESSFUL，全部 11 个单测通过（PageNameUtils 4 + Repository 2 + WindowPositionUtils 4 + Example 1）
 
-- [ ] **Step 2: API 24 模拟器冒烟**
+- [x] **Step 2: API 24 模拟器冒烟**
 
 在已连接的模拟器上执行：
 
@@ -1374,7 +1374,7 @@ adb logcat -d -b crash   # 期望：无 com.fly.pkg 的 FATAL EXCEPTION
 adb shell dumpsys window windows | grep "com.fly.pkg"   # 期望：能看到 SYSTEM_ALERT_WINDOW 悬浮窗
 ```
 
-- [ ] **Step 3: 推送**
+- [x] **Step 3: 推送**
 
 ```bash
 git push
