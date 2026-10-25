@@ -1,5 +1,6 @@
 package com.fly.pkg
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
                             ForegroundPageRepository.setFloatEnabled(enabled)
                         },
                         onOpenOverlaySettings = {
-                            startActivity(
+                            startSettingsSafely(
                                 Intent(
                                     Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                                     Uri.parse("package:$packageName"),
@@ -50,7 +51,7 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         onOpenA11ySettings = {
-                            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                            startSettingsSafely(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                         },
                         modifier = Modifier.padding(innerPadding),
                     )
@@ -63,5 +64,18 @@ class MainActivity : ComponentActivity() {
         super.onResume()
         overlayGranted.value = Settings.canDrawOverlays(this)
         a11yEnabled.value = PermissionChecks.isAccessibilityServiceEnabled(this)
+    }
+
+    private fun startSettingsSafely(intent: Intent) {
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            startActivity(
+                Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:$packageName"),
+                )
+            )
+        }
     }
 }
