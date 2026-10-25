@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fly.pkg.ForegroundPage
@@ -42,6 +44,7 @@ fun FloatCard(
     onCopy: () -> Unit,
     onDragBy: (Int, Int) -> Unit,
     onDragEnd: () -> Unit,
+    maxWidth: Dp,
 ) {
     Column(
         modifier = Modifier
@@ -57,6 +60,7 @@ fun FloatCard(
                     onDragEnd = { onDragEnd() },
                 )
             }
+            .widthIn(max = maxWidth)
             .clip(RoundedCornerShape(14.dp))
             .background(CardBackground)
             .border(1.dp, CardBorder, RoundedCornerShape(14.dp))

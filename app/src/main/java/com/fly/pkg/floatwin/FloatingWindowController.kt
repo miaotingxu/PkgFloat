@@ -17,12 +17,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.fly.pkg.ForegroundPage
 import com.fly.pkg.SettingsStore
+import com.fly.pkg.WindowPositionUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FloatingWindowController(private val context: Context) {
@@ -106,6 +108,10 @@ class FloatingWindowController(private val context: Context) {
         }
     }
 
+    private fun screenMetrics() = context.resources.displayMetrics
+
+    private fun maxCardWidthPx(): Int = (screenMetrics().widthPixels * 0.8f).toInt()
+
     private fun showCard() {
         removeView(dotView)
         dotView = null
@@ -118,10 +124,16 @@ class FloatingWindowController(private val context: Context) {
                 onCopy = { copyCurrentClassName() },
                 onDragBy = { dx, dy -> moveCard(dx, dy) },
                 onDragEnd = { onCardDragEnd() },
+                maxWidth = (maxCardWidthPx() / screenMetrics().density).dp,
             )
         }
         cardView = view
-        addOverlayView(view, settings.windowX, settings.windowY)
+        val m = screenMetrics()
+        val minVisible = (48 * m.density).toInt()
+        val (cx, cy) = WindowPositionUtils.clampPosition(
+            settings.windowX, settings.windowY, m.widthPixels, m.heightPixels, minVisible, minVisible,
+        )
+        addOverlayView(view, cx, cy)
     }
 
     private fun showDot(edgeX: Int, y: Int) {
@@ -132,7 +144,10 @@ class FloatingWindowController(private val context: Context) {
             FloatDot(onClick = { showCard() })
         }
         dotView = view
-        addOverlayView(view, edgeX, y)
+        val m = screenMetrics()
+        val dotSize = (36 * m.density).toInt()
+        val (cx, cy) = WindowPositionUtils.clampPosition(edgeX, y, m.widthPixels, m.heightPixels, dotSize, dotSize)
+        addOverlayView(view, cx, cy)
     }
 
     private fun moveCard(dx: Int, dy: Int) {
@@ -146,9 +161,17 @@ class FloatingWindowController(private val context: Context) {
     private fun onCardDragEnd() {
         val view = cardView ?: return
         val lp = view.layoutParams as WindowManager.LayoutParams
+        val metrics = context.resources.displayMetrics
+        val (cx, cy) = WindowPositionUtils.clampPosition(
+            lp.x, lp.y, metrics.widthPixels, metrics.heightPixels, view.width, view.height,
+        )
+        if (cx != lp.x || cy != lp.y) {
+            lp.x = cx
+            lp.y = cy
+            windowManager.updateViewLayout(view, lp)
+        }
         settings.windowX = lp.x
         settings.windowY = lp.y
-        val metrics = context.resources.displayMetrics
         val threshold = (48 * metrics.density).toInt()
         when {
             lp.x <= threshold -> showDot(edgeX = 0, y = lp.y)
