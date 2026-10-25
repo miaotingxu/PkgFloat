@@ -124,6 +124,7 @@ class FloatingWindowController(private val context: Context) {
                 onCopy = { copyCurrentClassName() },
                 onDragBy = { dx, dy -> moveCard(dx, dy) },
                 onDragEnd = { onCardDragEnd() },
+                onCollapse = { collapseToNearestEdge() },
                 maxWidth = (maxCardWidthPx() / screenMetrics().density).dp,
             )
         }
@@ -156,6 +157,18 @@ class FloatingWindowController(private val context: Context) {
         lp.x += dx
         lp.y += dy
         windowManager.updateViewLayout(view, lp)
+    }
+
+    private fun collapseToNearestEdge() {
+        val view = cardView ?: return
+        val lp = view.layoutParams as WindowManager.LayoutParams
+        settings.windowX = lp.x
+        settings.windowY = lp.y
+        val m = screenMetrics()
+        val dotSize = (36 * m.density).toInt()
+        val centerX = lp.x + view.width / 2
+        val edgeX = if (centerX < m.widthPixels / 2) 0 else m.widthPixels - dotSize
+        showDot(edgeX = edgeX, y = lp.y)
     }
 
     private fun onCardDragEnd() {

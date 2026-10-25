@@ -44,12 +44,16 @@ fun FloatCard(
     onCopy: () -> Unit,
     onDragBy: (Int, Int) -> Unit,
     onDragEnd: () -> Unit,
+    onCollapse: () -> Unit,
     maxWidth: Dp,
 ) {
     Column(
         modifier = Modifier
             .pointerInput(Unit) {
-                detectTapGestures(onTap = { onCopy() })
+                detectTapGestures(
+                    onTap = { onCopy() },
+                    onDoubleTap = { onCollapse() },
+                )
             }
             .pointerInput(Unit) {
                 detectDragGestures(

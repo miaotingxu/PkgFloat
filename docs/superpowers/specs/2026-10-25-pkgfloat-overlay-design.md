@@ -65,8 +65,9 @@ PkgFloat 是一个面向开发者/测试人员的 Android 调试工具：以**�
 - 半透明深色圆角卡片（样式 B，见 `.superpowers/brainstorm/` 中的 mockup）
 - 交互：
   - 单击卡片：`ClipboardManager` 复制完整类名，Toast 提示"已复制"
+  - 双击卡片：收起为小圆点（吸附到较近的一侧边缘）
   - 按住拖动：实时更新位置
-  - 松手时贴近左右边缘：动画吸附收起为半透明小圆点；点击小圆点展开恢复原位
+  - 松手时贴近左右边缘：吸附收起为半透明小圆点；点击小圆点展开恢复原位
 - 悬浮窗位置用 `SharedPreferences` 持久化，启动时恢复
 - 应用图标通过 `PackageManager.getApplicationIcon(packageName)` 动态获取
 
