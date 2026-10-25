@@ -23,5 +23,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "PkgFloat"
-include(":app")
+include(":pagelens")
  

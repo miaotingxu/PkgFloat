@@ -63,7 +63,7 @@ android {
 tasks.register<Copy>("packageReleaseApk") {
     dependsOn("assembleRelease")
     val apkName = "PageLens-v${android.defaultConfig.versionName}.apk"
-    from(layout.buildDirectory.file("outputs/apk/release/app-release.apk")) {
+    from(layout.buildDirectory.file("outputs/apk/release/pagelens-release.apk")) {
         rename { apkName }
     }
     into(rootProject.file("dist"))
