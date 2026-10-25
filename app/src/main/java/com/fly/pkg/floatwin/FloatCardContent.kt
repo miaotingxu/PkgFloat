@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.fly.pkg.ForegroundPage
 import kotlin.math.roundToInt
 
-private val CardBackground = Color(0x8C141414)
+private val CardBackground = Color(0x59141414)
 private val CardBorder = Color(0x26FFFFFF)
 private val MonoText = Color(0xFF9ECBFF)
 
@@ -95,7 +95,7 @@ fun FloatCard(
 }
 
 @Composable
-fun FloatDot(onClick: () -> Unit) {
+fun FloatDot(onClick: () -> Unit, icon: ImageBitmap?) {
     Box(
         modifier = Modifier
             .size(36.dp)
@@ -103,5 +103,14 @@ fun FloatDot(onClick: () -> Unit) {
             .background(CardBackground)
             .border(1.dp, CardBorder, CircleShape)
             .clickable(onClick = onClick),
-    )
+        contentAlignment = Alignment.Center,
+    ) {
+        if (icon != null) {
+            Image(
+                bitmap = icon,
+                contentDescription = null,
+                modifier = Modifier.size(22.dp).clip(CircleShape),
+            )
+        }
+    }
 }

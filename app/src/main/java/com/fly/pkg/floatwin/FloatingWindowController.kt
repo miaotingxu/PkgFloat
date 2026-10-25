@@ -142,7 +142,8 @@ class FloatingWindowController(private val context: Context) {
         cardView = null
         if (dotView != null) return
         val view = newComposeView {
-            FloatDot(onClick = { showCard() })
+            val content by contentFlow.collectAsState()
+            FloatDot(onClick = { showCard() }, icon = content.icon)
         }
         dotView = view
         val m = screenMetrics()
